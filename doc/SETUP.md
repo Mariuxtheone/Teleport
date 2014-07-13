@@ -12,12 +12,16 @@ Clone the repository from
 
 The complete Teleport repository contains **3 modules**
 
-* **teleportlib**  - The Teleport library (the module you need to include Teleport inside your project)*
+* **teleportlib**  - The **Teleport library** (the module you need to include Teleport inside your project)*
 
-Two additional modules containing a Demo app.
+There are Two additional modules containing a **Demo app**.
 
 * **mobile** - A Mobile App you can use to test Teleport main features
 * **wear** - A companion Wear App which is controlled by the Mobile App
+
+Add the **teleportlib** module to your build.gradle dependencies
+
+    compile project(':teleportlib')
 
 ##3) Be sure to have downloaded all the Android Wear components from SDK Manager, then add teleport to your build.gradle dependencies:
     
