@@ -1,28 +1,28 @@
 #TeleportService
 
-'TeleportService' is a full-fledged 'WearableListenerService', with all the connection layer already setup and ready for use.
+`TeleportService` is a full-fledged `WearableListenerService`, with all the connection layer already setup and ready for use.
 
-It encapsulates all the functions of 'TeleportClient', like the 'sync...()' and 'sendMessage()' and the AsyncTasks 'OnSyncDataItemTask' and 'OnSendMessageTask'.
+It encapsulates all the functions of `TeleportClient`, like the `sync...()` and `sendMessage()` and the AsyncTasks `OnSyncDataItemTask` and `OnSendMessageTask`.
 
 To understand how to implement these features head to [Sync Data](/doc/SYNCDATA.md) and [Send and Retrieve Message](/doc/MESSAGE.md).
 
 ##Set up a TeleportService
 
-'TeleportService' is an abstract class so you need to **extend it**.
+`TeleportService` is an abstract class so you need to **extend it**.
  
- **Example:** Let's say we want a Service in our Wear app. We can do it like this:
+ **Example:** Let`s say we want a Service in our Wear app. We can do it like this:
 
         public class WearService extends TeleportService {
         
         }
 
-Once you have extended 'TeleportService', you need to add it to the Android Manifest of the app where you have extended it.
+Once you have extended `TeleportService`, you need to add it to the Android Manifest of the app where you have extended it.
 
 You need to put it under the *<application>* tag in the Manifest.
 
-**Example:** Let's add the WearService to the Manifest of our **wear** app:
+**Example:** Let`s add the WearService to the Manifest of our **wear** app:
 
-'''xml
+```xml
 
         <service
             android:name=".WearService" >
@@ -31,19 +31,19 @@ You need to put it under the *<application>* tag in the Manifest.
             </intent-filter>
         </service>
         
-'''
+```
 
 #Set the Task
 
-Once you've added it to the Manifest:
+Once you`ve added it to the Manifest:
  
-1) Extend the Tasks you need, 'OnSyncDataItemTask' and 'OnSendMessageTask' like is described in [Sync Data](/doc/SYNCDATA.md) and [Send and Retrieve Message](/doc/MESSAGE.md).
+1) Extend the Tasks you need, `OnSyncDataItemTask` and `OnSendMessageTask` like is described in [Sync Data](/doc/SYNCDATA.md) and [Send and Retrieve Message](/doc/MESSAGE.md).
 
-2) Add the task in your Service 'onCreate()'
+2) Add the task in your Service `onCreate()`
 
-**Example:** let's create a Task which starts and Activity when a Message "startActivity" is received.
+**Example:** let`s create a Task which starts and Activity when a Message "startActivity" is received.
 
-'''java
+```java
     
     public class WearService extends TeleportService{
     
@@ -70,8 +70,8 @@ Once you've added it to the Manifest:
             startActivity(startIntent);
          }
 
-            //let's reset the task (otherwise it will be executed only once)
+            //let`s reset the task (otherwise it will be executed only once)
             setOnGetMessageTask(new StartActivityTask());
         }
     }
-'''
+```
