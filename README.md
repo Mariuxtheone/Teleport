@@ -133,6 +133,7 @@ Here's a *Mobile and a Wear Activity* already configured to Sync Data.
 Jump to [Library Set Up](/doc/SETUP.md) !!!
 
 ##Follow me on
+Author: Mario Viviani
 <a href="https://plus.google.com/+MarioViviani/posts">
   <img alt="Follow me on Google+"
        src="https://github.com/Mariuxtheone/Teleport/raw/master/doc/images/googleplus64.png" />
