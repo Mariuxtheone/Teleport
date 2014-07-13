@@ -36,7 +36,6 @@ To Sync Data and send Messages, you can use commodity methods like
 * [Library Set Up:](/doc/SETUP.md) How to import Teleport library in your project.
 * [TeleportClient in Activity:](/doc/TELEPORTCLIENT.md) How to setup a TeleportClient.
 * [TeleportService:](/doc/TELEPORTSERVICE.md) How to setup a TeleportService.
-
 * [Sync Data:](/doc/SYNCDATA.md) How to Sync Data
 * [Send and Receive Messages:](/doc/MESSAGE.md) How to Send and Receive Messages
 
