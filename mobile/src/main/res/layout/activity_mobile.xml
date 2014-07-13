@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MobileActivity">
+
+    <TextView
+        android:id="@+id/syncDataItemTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync DataItem:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/syncDataItemEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/syncDataItemTextView"
+        android:hint="Insert DataItem to Sync with Wear" />
+
+    <Button
+        android:id="@+id/syncDataItemButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/syncDataItemEditText"
+        android:onClick="syncDataItem"
+        android:text="Sync DataItem" />
+
+    <TextView
+        android:id="@+id/sendMessageTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/syncDataItemButton"
+        android:layout_marginTop="10dp"
+        android:text="Send Message:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/sendMessageEditText"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sendMessageTextView"
+        android:hint="Insert Message to Send to Wear" />
+
+    <Button
+        android:id="@+id/sendMessageButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sendMessageEditText"
+        android:onClick="sendMessage"
+        android:text="Send Message to Wear" />
+
+    <TextView
+        android:id="@+id/startActivityTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sendMessageButton"
+        android:layout_marginTop="10dp"
+        android:text="Start Activity:"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/startActivityButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startActivityTextView"
+        android:onClick="sendStartActivityMessage"
+        android:text="Start Activity on Wear" />
+
+</RelativeLayout>

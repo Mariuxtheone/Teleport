@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Teleport</string>
+    <string name="hello_round">Hello Teleport!</string>
+    <string name="hello_square">Hello Teleport!</string>
+
+</resources>
