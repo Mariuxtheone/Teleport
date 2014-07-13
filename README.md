@@ -137,7 +137,7 @@ Jump to [Library Set Up](/doc/SETUP.md) !!!
   <img alt="Follow me on Google+"
        src="https://github.com/Mariuxtheone/Teleport/raw/master/doc/images/googleplus64.png" />
 </a>
-<a href="it.linkedin.com/pub/mario-viviani/45/b96/a59/">
+<a href="https://it.linkedin.com/pub/mario-viviani/45/b96/a59/">
   <img alt="Follow me on LinkedIn"
        src="https://github.com/Mariuxtheone/Teleport/raw/master/doc/images/linkedin64.png" />
 </a>
