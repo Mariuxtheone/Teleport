@@ -65,4 +65,4 @@ You can add it where you want, for example to your Activity `onCreate()` like th
          mTeleportClient.setOnSyncDataItemTask(new ShowToastFromOnSyncDataTask());
 ```
 
-To Learn how to Send Message to another device continue to [Send and Receive Messages](/doc/MESSAGE.md)
+To learn how to send Messages to another device continue to [Send and Receive Messages](/doc/MESSAGE.md)
