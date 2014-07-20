@@ -1,3 +1,16 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
 apply plugin: 'com.android.library'
 
 android {
@@ -9,7 +22,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 20
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.1"
     }
     buildTypes {
         release {
@@ -23,3 +36,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.gms:play-services-wearable:+'
 }
+
+//apply from: 'bintray_publish.gradle'

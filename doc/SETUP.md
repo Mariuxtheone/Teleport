@@ -2,6 +2,43 @@
 
 **Teleport requires API 15+**
 
+You have 2 options to import the project. The easiest one is to import the maven project from jcenter().
+Or, you can clone the repo from Github, but you'll need to manually update it.
+
+#Import the project from Maven (suggested)
+
+You need to have jcenter() repository in your project root build.gradle, but since it is the default artifact repository in Android Studio, you should be already good to go!
+
+##1) Add dependency in your modules build.gradle file
+
+In **both your mobile and wear modules**, add Teleport under *dependencies*:
+
+    compile 'Teleport:teleportlib:0.1.1'
+        
+Be sure to add the latest version of the lib (use lint check on Android Studio).
+
+     
+##2) Add the wearable dependency to your build.gradle dependencies:
+
+Be sure to have downloaded all the Android Wear components from SDK Manager, then add the wearable dependency under *dependencies*
+    
+    compile 'com.google.android.gms:play-services-wearable:+'
+    
+##3) Add Google Play Services meta tag in your modules AndroidManifest.xml
+
+In **both your mobile and wear modules**, add the Google Play meta tag under the *application* tag:
+
+    <meta-data 
+     android:name="com.google.android.gms.version" 
+     android:value="@integer/google_play_services_version" />
+
+##4) If it's not there, in your **mobile module** add your wear module to dependencies
+
+    wearApp project(':wear')
+
+
+#Clone the repository from Github
+
 ##1) Clone the repository from Github
 
 Clone the repository from 
@@ -28,7 +65,7 @@ Add the **teleportlib** module to your build.gradle dependencies
     compile 'com.google.android.gms:play-services-wearable:+'
     compile project(':teleportlib')
     
-##4) If it's not there, add your wear module to dependencies
+##4) If it's not there, in your mobile module add your wear module to dependencies
 
     wearApp project(':wear')
      
