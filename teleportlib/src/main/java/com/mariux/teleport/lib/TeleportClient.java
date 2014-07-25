@@ -304,6 +304,8 @@ public class TeleportClient implements DataApi.DataListener,
     }
 
 
+
+
     public OnGetMessageTask getOnGetMessageTask() {
         return onGetMessageTask;
     }
@@ -341,28 +343,48 @@ public class TeleportClient implements DataApi.DataListener,
     }
 
 
-    /**
-     * Loads Bitmap from Asset
-     *
-     * @param asset Asset to be converted to Bitmap
+    /***
+     * Task to elaborate image from an Asset. You must pass the Asset and the mTeleportClient.getGoogleApiClient
      */
-    public Bitmap loadBitmapFromAsset(Asset asset) {
-        if (asset == null) {
-            throw new IllegalArgumentException("Asset must be non-null");
+    public abstract static class ImageFromAssetTask extends AsyncTask<Object, Void,Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
+                    (GoogleApiClient)params[1], (Asset)params[0]).await().getInputStream();
+            Bitmap bitmap=  BitmapFactory.decodeStream(assetInputStream);
+            return bitmap;
+
         }
 
-        // convert asset into a file descriptor and block until it's ready
-        InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
-                mGoogleApiClient, asset).await().getInputStream();
+        @Override
+        protected abstract void onPostExecute(Bitmap bitmap);
+
+    };
 
 
-        if (assetInputStream == null) {
-            Log.w(TAG, "Requested an unknown Asset.");
-            return null;
-        }
-        // decode the stream into a bitmap
-        return BitmapFactory.decodeStream(assetInputStream);
-    }
+//    /**
+//     * Loads Bitmap from Asset
+//     *
+//     * @param asset Asset to be converted to Bitmap
+//     */
+//    public Bitmap loadBitmapFromAsset(Asset asset) {
+//        if (asset == null) {
+//            throw new IllegalArgumentException("Asset must be non-null");
+//        }
+//
+//        // convert asset into a file descriptor and block until it's ready
+//        InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
+//                mGoogleApiClient, asset).await().getInputStream();
+//
+//
+//        if (assetInputStream == null) {
+//            Log.w(TAG, "Requested an unknown Asset.");
+//            return null;
+//        }
+//        // decode the stream into a bitmap
+//        return BitmapFactory.decodeStream(assetInputStream);
+//    }
 
 
 
