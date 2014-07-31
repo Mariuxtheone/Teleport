@@ -239,40 +239,77 @@ public class TeleportClient implements DataApi.DataListener,
     //Task to send messages to nodes
     private class StartTeleportMessageTask extends AsyncTask<Object, Void, Object> {
 
+        ResultCallback<MessageApi.SendMessageResult> mCallback;
+
+        /**
+         * Constructor with default ResultCallback
+         */
+        private StartTeleportMessageTask() {
+            super();
+        }
+
+        /**
+         * Constructor with a custom ResultCallback
+         * @param callback the ResultCallback
+         */
+        private StartTeleportMessageTask(ResultCallback<MessageApi.SendMessageResult> callback) {
+            super();
+            mCallback = callback;
+        }
 
         @Override
         protected Void doInBackground(Object... args) {
             Collection<String> nodes = getNodes();
             for (String node : nodes) {
-                propagateMessageToNodes(node, (String) args[0], (byte[]) args[1]);
+                propagateMessageToNodes(node, (String) args[0], (byte[]) args[1], mCallback);
             }
             return null;
         }
     }
 
     //propagate message to nodes
-    private void propagateMessageToNodes(String node, String path, byte[] payload) {
-        Wearable.MessageApi.sendMessage(
-                mGoogleApiClient, node, path, payload).setResultCallback(
+    private void propagateMessageToNodes(String node, String path, byte[] payload,ResultCallback<MessageApi.SendMessageResult> callback) {
 
-                new ResultCallback<MessageApi.SendMessageResult>() {
-                    @Override
-                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
-                        if (!sendMessageResult.getStatus().isSuccess()) {
-                            Log.e(TAG, "Failed to send message with status code: "
-                                    + sendMessageResult.getStatus().getStatusCode());
-                        }
+        // If callback is null, define a default callback
+        if (callback == null){
+            callback = new ResultCallback<MessageApi.SendMessageResult>() {
+                @Override
+                public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                    if (!sendMessageResult.getStatus().isSuccess()) {
+                        Log.e(TAG, "Failed to send message with status code: "
+                                + sendMessageResult.getStatus().getStatusCode());
                     }
                 }
-        );
+            };
+        }
+
+        Wearable.MessageApi.sendMessage(
+                mGoogleApiClient, node, path, payload).setResultCallback(callback);
 
     }
 
+    /**
+     * Send a message with a default callback
+     *
+     * @param path      path message
+     * @param payload   payload to attach to message
+     */
     public void sendMessage(String path, byte[] payload) {
         //Start a StartTeleportMessageTask with proper Path and Payload
-        new StartTeleportMessageTask().execute(path, payload);
+        sendMessage(path, payload, null);
     }
 
+    /**
+     * Send a message with a custom callback
+     *
+     * @param path      path message
+     * @param payload   payload to attach to message
+     * @param callback  custom callback
+     */
+    public void sendMessage(String path, byte[] payload,ResultCallback<MessageApi.SendMessageResult> callback) {
+        //Start a StartTeleportMessageTask with proper Path and Payload
+        new StartTeleportMessageTask(callback).execute(path, payload);
+    }
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
