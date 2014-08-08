@@ -300,8 +300,15 @@ public class TeleportClient implements DataApi.DataListener,
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "onMessageReceived() A message from watch was received:" + messageEvent.getRequestId() + " " + messageEvent.getPath());
 
+        boolean flagHandeld = false;
 
-        if (onGetMessageTask != null) {
+        if(onGetMessageTaskBuilder != null) {
+            String path = messageEvent.getPath();
+            onGetMessageTaskBuilder.build().execute(path);
+            flagHandeld = true;
+        }
+
+        if (!flagHandeld && onGetMessageTask != null) {
             String messagePath = messageEvent.getPath();
             onGetMessageTask.execute(messagePath);
         }
