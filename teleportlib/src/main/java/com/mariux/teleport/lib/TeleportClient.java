@@ -46,8 +46,10 @@ public class TeleportClient implements DataApi.DataListener,
     //    private AsyncTask<?,?,?> asyncTask;
     private OnSyncDataItemTask onSyncDataItemTask;
     private OnSyncDataItemTask.Builder onSyncDataItemTaskBuilder;
+    private OnSyncDataItemCallback onSyncDataItemCallback;
     private OnGetMessageTask onGetMessageTask;
     private OnGetMessageTask.Builder onGetMessageTaskBuilder;
+    private OnGetMessageCallback onGetMessageCallback;
 
     private Handler mHandler;
 
@@ -99,10 +101,14 @@ public class TeleportClient implements DataApi.DataListener,
 
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
                 DataMap dataMap = dataMapItem.getDataMap();
-                
+
                 boolean flagHandled = false;
                 if (onSyncDataItemTaskBuilder != null) {
                     onSyncDataItemTaskBuilder.build().execute(dataMap);
+                    flagHandled = true;
+                }
+                if (!flagHandled && onSyncDataItemCallback != null) {
+                    onSyncDataItemCallback.onDataSync(dataMap);
                     flagHandled = true;
                 }
                 if (!flagHandled && onSyncDataItemTask != null) {
@@ -218,6 +224,15 @@ public class TeleportClient implements DataApi.DataListener,
         this.onSyncDataItemTaskBuilder = onSyncDataItemTaskBuilder;
     }
 
+    /**
+     * Set the Callback to be executed when a DataItem is synced
+     *
+     * @param onSyncDataItemCallback A Task that extends TeleportTask that should be executed when a DataItem is Synced. Keep in mind it will be executed only once, so you might need to reset it.
+     */
+    public void setOnSyncDataItemCallback(OnSyncDataItemCallback onSyncDataItemCallback) {
+        this.onSyncDataItemCallback = onSyncDataItemCallback;
+    }
+
 
     /**
      * AsyncTask that will be executed when a DataItem is synced. You should extend this task and implement the onPostExecute() method when implementing your Activity.
@@ -242,6 +257,10 @@ public class TeleportClient implements DataApi.DataListener,
         protected abstract void onPostExecute(DataMap result);
     }
 
+    public abstract static class OnSyncDataItemCallback {
+
+        abstract public void onDataSync(DataMap dataMap);
+    }
 
     //-----------------MESSAGING------------------//
 
@@ -300,17 +319,24 @@ public class TeleportClient implements DataApi.DataListener,
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "onMessageReceived() A message from watch was received:" + messageEvent.getRequestId() + " " + messageEvent.getPath());
 
-        boolean flagHandeld = false;
+        boolean flagHandled = false;
 
         if(onGetMessageTaskBuilder != null) {
             String path = messageEvent.getPath();
             onGetMessageTaskBuilder.build().execute(path);
-            flagHandeld = true;
+            flagHandled = true;
         }
 
-        if (!flagHandeld && onGetMessageTask != null) {
+        if(!flagHandled && onGetMessageCallback != null) {
+            String messagePath = messageEvent.getPath();
+            onGetMessageCallback.onCallback(messagePath);
+            flagHandled = true;
+        }
+
+        if (!flagHandled && onGetMessageTask != null) {
             String messagePath = messageEvent.getPath();
             onGetMessageTask.execute(messagePath);
+            flagHandled = true;
         }
 
     }
@@ -337,6 +363,11 @@ public class TeleportClient implements DataApi.DataListener,
     }
 
 
+    public abstract static class OnGetMessageCallback {
+
+        abstract public void onCallback(String dataMap);
+    }
+
     public OnGetMessageTask getOnGetMessageTask() {
         return onGetMessageTask;
     }
@@ -356,6 +387,9 @@ public class TeleportClient implements DataApi.DataListener,
         this.onGetMessageTaskBuilder = onGetMessageTaskBuilder;
     }
 
+    public void setOnGetMessageCallback(OnGetMessageCallback onGetMessageCallback) {
+        this.onGetMessageCallback = onGetMessageCallback;
+    }
     //---END MESSAGING ------
 
     @Override
