@@ -47,6 +47,8 @@ public class WearActivity extends Activity {
 
 
 
+
+
     }
 
     @Override

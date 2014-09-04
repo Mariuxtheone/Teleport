@@ -66,3 +66,5 @@ You can add it where you want, for example to your Activity `onCreate()` like th
 
          mTeleportClient.setOnGetMessageTask(new StartActivityTask());
 ```
+
+If you need more advanced usage, you can use AsyncTask Factory or Callbacks. Learn more here: [Advanced Usage](/doc/ADVANCEDUSAGE.md)

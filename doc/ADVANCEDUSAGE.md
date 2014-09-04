@@ -1,4 +1,6 @@
-# Using AsyncTask Factory
+#ADVANCED USAGE
+
+## Using AsyncTask Factory
 
 AsyncTask are single shot.
 
@@ -29,4 +31,28 @@ mTeleportClient.setOnSyncDataItemTaskBuilder (
         }
     }
  );
+```
+
+##Using Callbacks
+
+If you want to manage yourself the response of Data sync or Message received, you can use Callbacks. There are `OnGetMessageCallback` and `OnSyncDataItemCallback` you can set in your `TeleportClient`.
+
+Remember: in this case you need to **manage the threading yourself!**. Callbacks are not asynchronous like AsyncTask and AsyncTask Factory.
+
+``` java
+        //OnGetMessageCallback
+        mTeleportClient.setOnGetMessageCallback(new TeleportClient.OnGetMessageCallback() {
+            @Override
+            public void onCallback(String dataMap) {
+                //your callback here...
+            }
+        });
+        
+        //OnGetMessageCallback
+        mTeleportClient.setOnSyncDataItemCallback(new TeleportClient.OnSyncDataItemCallback() {
+            @Override
+            public void onDataSync(DataMap dataMap) {
+                //your callback here...
+            }
+        });
 ```

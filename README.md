@@ -38,6 +38,7 @@ To Sync Data and send Messages, you can use commodity methods like
 * [TeleportService:](/doc/TELEPORTSERVICE.md) How to setup a TeleportService.
 * [Sync Data:](/doc/SYNCDATA.md) How to Sync Data
 * [Send and Receive Messages:](/doc/MESSAGE.md) How to Send and Receive Messages
+* [Advanced Usage:](/doc/ADVANCEDUSAGE.md) AsyncTask Factory and Callbacks
 
 ##Can I have an example of how easy is Teleport to use?
 

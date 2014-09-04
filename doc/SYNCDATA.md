@@ -65,4 +65,6 @@ You can add it where you want, for example to your Activity `onCreate()` like th
          mTeleportClient.setOnSyncDataItemTask(new ShowToastFromOnSyncDataTask());
 ```
 
+If you need more advanced usage, you can use AsyncTask Factory or Callbacks. Learn more here: [Advanced Usage](/doc/ADVANCEDUSAGE.md)
+
 To learn how to send Messages to another device continue to [Send and Receive Messages](/doc/MESSAGE.md)
