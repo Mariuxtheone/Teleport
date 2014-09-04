@@ -10,7 +10,7 @@ Sometime, the event come and the AsyncTask is still currently running and it end
 
 There you should not use classical setters but use the `Builder` setter.
 
-Each AsynTask is provided with an appropriate builder. The main purpose is that every time a new event is triggered, a new AsyncTask will be instantiated automatically.
+Each AsyncTask is provided with an appropriate builder. The main purpose is that every time a new event is triggered, a new AsyncTask will be instantiated automatically.
 
 ```java
 mTeleportClient.setOnGetMessageTaskBuilder (
