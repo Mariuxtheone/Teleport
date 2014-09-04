@@ -13,7 +13,7 @@ You need to have jcenter() repository in your project root build.gradle, but sin
 
 In **both your mobile and wear modules**, add Teleport under *dependencies*:
 
-    compile 'Teleport:teleportlib:0.1.1'
+    compile 'Teleport:teleportlib:0.1.2'
         
 Be sure to add the latest version of the lib (use lint check on Android Studio).
 
