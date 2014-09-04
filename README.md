@@ -144,6 +144,9 @@ Author: Mario Viviani
        src="https://github.com/Mariuxtheone/Teleport/raw/master/doc/images/linkedin64.png" />
 </a>
 
+##Thanks to:
+Damien Cavaillès - https://github.com/thedamfr
+
 
 ##License
 
