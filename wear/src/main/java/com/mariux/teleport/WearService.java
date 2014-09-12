@@ -18,7 +18,30 @@ public class WearService extends TeleportService{
     public void onCreate() {
         super.onCreate();
 
+        //The quick way is to use setOnGetMessageTask, and set a new task
         setOnGetMessageTask(new StartActivityTask());
+
+
+        //alternatively, you can use the Builder to create new Tasks
+        /*
+        setOnGetMessageTaskBuilder(new OnGetMessageTask.Builder() {
+            @Override
+            public OnGetMessageTask build() {
+                return new OnGetMessageTask() {
+                    @Override
+                    protected void onPostExecute(String path) {
+                        if (path.equals("startActivity")){
+
+                            Intent startIntent = new Intent(getBaseContext(), WearActivity.class);
+                            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(startIntent);
+                        }
+
+                    }
+                };
+            }
+        });
+        */
 
     }
 

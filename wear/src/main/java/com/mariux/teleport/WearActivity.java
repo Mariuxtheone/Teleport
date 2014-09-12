@@ -45,6 +45,38 @@ public class WearActivity extends Activity {
         mTeleportClient.setOnGetMessageTask(mMessageTask);
 
 
+        //alternatively, you can use the Builders like indicated here for SyncData and Message
+
+        /*
+        mTeleportClient.setOnSyncDataItemTaskBuilder(new TeleportClient.OnSyncDataItemTask.Builder() {
+            @Override
+            public TeleportClient.OnSyncDataItemTask build() {
+                return new TeleportClient.OnSyncDataItemTask() {
+                    @Override
+                    protected void onPostExecute(DataMap result) {
+                        String s = result.getString("string");
+                        Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
+                    }
+                };
+            }
+        });
+
+        */
+
+        /*
+        mTeleportClient.setOnGetMessageTaskBuilder(new TeleportClient.OnGetMessageTask.Builder() {
+            @Override
+            public TeleportClient.OnGetMessageTask build() {
+                return new TeleportClient.OnGetMessageTask() {
+                    @Override
+                    protected void onPostExecute(String path) {
+                        Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
+                    }
+                };
+            }
+        });
+        */
+
 
 
 
