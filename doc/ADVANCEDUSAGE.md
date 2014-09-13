@@ -35,7 +35,7 @@ mTeleportClient.setOnSyncDataItemTaskBuilder (
 
 ##Using Callbacks
 
-If you want to manage yourself the response of Data sync or Message received, you can use Callbacks. There are `OnGetMessageCallback` and `OnSyncDataItemCallback` you can set in your `TeleportClient`.
+If you want to manage yourself the response of Data sync or Message received, you can use Callbacks. There are `OnGetMessageCallback` and `OnSyncDataItemCallback` you can set in your `TeleportClient` and `TeleportService`.
 
 Remember: in this case you need to **manage the threading yourself!**. Callbacks are not asynchronous like AsyncTask and AsyncTask Factory.
 
