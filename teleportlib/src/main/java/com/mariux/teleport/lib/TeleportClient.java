@@ -70,14 +70,14 @@ public class TeleportClient implements DataApi.DataListener,
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(TAG, "onConnected");
+        Log.d(TAG, "onConnected");
         Wearable.DataApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
     }
 
     public void disconnect() {
-        Log.e(TAG, "disconnect");
+        Log.d(TAG, "disconnect");
         Wearable.DataApi.removeListener(mGoogleApiClient, this);
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
