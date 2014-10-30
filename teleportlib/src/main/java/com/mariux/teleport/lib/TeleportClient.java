@@ -424,10 +424,28 @@ public class TeleportClient implements DataApi.DataListener,
 
         @Override
         protected Bitmap doInBackground(Object... params) {
-            InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
-                    (GoogleApiClient) params[1], (Asset) params[0]).await().getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(assetInputStream);
-            return bitmap;
+
+            Asset asset = (Asset) params[0];
+            if (asset == null) {
+                return null;
+            }
+
+            GoogleApiClient googleApiClient = (GoogleApiClient) params[1];
+            if (googleApiClient == null || !googleApiClient.isConnected()) {
+                return null;
+            }
+
+            DataApi.GetFdForAssetResult pendingResult = Wearable.DataApi.getFdForAsset(googleApiClient, asset).await();
+            if (pendingResult == null || pendingResult.getFd() == null) {
+                return null;
+            }
+
+            InputStream assetInputStream = pendingResult.getInputStream();
+            if (assetInputStream == null) {
+                return null;
+            }
+
+            return BitmapFactory.decodeStream(assetInputStream);
 
         }
 
