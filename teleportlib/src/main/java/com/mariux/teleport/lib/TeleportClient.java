@@ -269,8 +269,10 @@ public class TeleportClient implements DataApi.DataListener,
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
 
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
+        if (nodes.getStatus().isSuccess()) {
+            for (Node node : nodes.getNodes()) {
+                results.add(node.getId());
+            }
         }
 
         return results;
