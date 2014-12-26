@@ -29,6 +29,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
+    compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.google.android.gms:play-services-wearable:+'
     compile project(':teleportlib')
 }
