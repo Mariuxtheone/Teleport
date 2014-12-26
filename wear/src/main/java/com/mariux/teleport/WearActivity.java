@@ -3,26 +3,21 @@ package com.mariux.teleport;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.wearable.DataMap;
-import com.mariux.teleport.lib.TeleportClient;
+
+import de.greenrobot.event.EventBus;
 
 public class WearActivity extends Activity {
-
+    private static final String TAG = "WearActivity";
     private TextView mTextView;
-    TeleportClient mTeleportClient;
-    TeleportClient.OnSyncDataItemTask mOnSyncDataItemTask;
-    TeleportClient.OnGetMessageTask mMessageTask;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wear);
-
 
         final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
@@ -31,98 +26,44 @@ public class WearActivity extends Activity {
                 mTextView = (TextView) stub.findViewById(R.id.text);
             }
         });
-
-        //instantiate the TeleportClient with the application Context
-        mTeleportClient = new TeleportClient(this);
-
-        //Create and initialize task
-        mOnSyncDataItemTask = new ShowToastOnSyncDataItemTask();
-        mMessageTask = new ShowToastFromOnGetMessageTask();
-
-
-        //let's set the two task to be executed when an item is synced or a message is received
-        mTeleportClient.setOnSyncDataItemTask(mOnSyncDataItemTask);
-        mTeleportClient.setOnGetMessageTask(mMessageTask);
-
-
-        //alternatively, you can use the Builders like indicated here for SyncData and Message
-
-        /*
-        mTeleportClient.setOnSyncDataItemTaskBuilder(new TeleportClient.OnSyncDataItemTask.Builder() {
-            @Override
-            public TeleportClient.OnSyncDataItemTask build() {
-                return new TeleportClient.OnSyncDataItemTask() {
-                    @Override
-                    protected void onPostExecute(DataMap result) {
-                        String s = result.getString("string");
-                        Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
-                    }
-                };
-            }
-        });
-
-        */
-
-        /*
-        mTeleportClient.setOnGetMessageTaskBuilder(new TeleportClient.OnGetMessageTask.Builder() {
-            @Override
-            public TeleportClient.OnGetMessageTask build() {
-                return new TeleportClient.OnGetMessageTask() {
-                    @Override
-                    protected void onPostExecute(String path) {
-                        Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-                    }
-                };
-            }
-        });
-        */
-
-
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mTeleportClient.connect();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mTeleportClient.disconnect();
-
+        EventBus.getDefault().unregister(this);
     }
 
-    //Task to show the String from DataMap with key "string" when a DataItem is synced
-    public class ShowToastOnSyncDataItemTask extends TeleportClient.OnSyncDataItemTask {
-
-        protected void onPostExecute(DataMap dataMap) {
-
-            String s = dataMap.getString("string");
-
-            Toast.makeText(getApplicationContext(),"DataItem - "+s,Toast.LENGTH_SHORT).show();
-
-            mTeleportClient.setOnSyncDataItemTask(new ShowToastOnSyncDataItemTask());
+    //For Message API receiving
+    public void onEvent(final String messageContent) {
+        Log.d(TAG, "onEvent message: " + messageContent);
+        if(mTextView != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTextView.setText("Received message: " + messageContent);
+                }
+            });
         }
     }
 
-    //Task that shows the path of a received message
-    public class ShowToastFromOnGetMessageTask extends TeleportClient.OnGetMessageTask {
-
-        @Override
-        protected void onPostExecute(String  path) {
-
-            Toast.makeText(getApplicationContext(),"Message - "+path,Toast.LENGTH_SHORT).show();
-
-            //let's reset the task (otherwise it will be executed only once)
-            mTeleportClient.setOnGetMessageTask(new ShowToastFromOnGetMessageTask());
+    //For DataItem API changes
+    public void onEvent(DataMap dataMap) {
+        final String string = dataMap.getString("string");
+        Log.d(TAG, "onPostExecute String from map: " + string);
+        if(mTextView != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTextView.setText("Received String from map: " + string);
+                }
+            });
         }
     }
-
-
-
-
 }

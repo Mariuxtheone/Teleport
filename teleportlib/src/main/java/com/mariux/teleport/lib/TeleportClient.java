@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,6 +30,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Created by Mario Viviani on 09/07/2014.
  */
@@ -43,16 +44,6 @@ public class TeleportClient implements DataApi.DataListener,
 
     private GoogleApiClient mGoogleApiClient;
 
-    //    private AsyncTask<?,?,?> asyncTask;
-    private OnSyncDataItemTask onSyncDataItemTask;
-    private OnSyncDataItemTask.Builder onSyncDataItemTaskBuilder;
-    private OnSyncDataItemCallback onSyncDataItemCallback;
-    private OnGetMessageTask onGetMessageTask;
-    private OnGetMessageTask.Builder onGetMessageTaskBuilder;
-    private OnGetMessageCallback onGetMessageCallback;
-
-    private Handler mHandler;
-
     public TeleportClient(Context context) {
 
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -60,8 +51,6 @@ public class TeleportClient implements DataApi.DataListener,
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-
     }
 
     public void connect() {
@@ -102,19 +91,7 @@ public class TeleportClient implements DataApi.DataListener,
                 DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
                 DataMap dataMap = dataMapItem.getDataMap();
 
-                boolean flagHandled = false;
-                if (onSyncDataItemTaskBuilder != null) {
-                    onSyncDataItemTaskBuilder.build().execute(dataMap);
-                    flagHandled = true;
-                }
-                if (!flagHandled && onSyncDataItemCallback != null) {
-                    onSyncDataItemCallback.onDataSync(dataMap);
-                    flagHandled = true;
-                }
-                if (!flagHandled && onSyncDataItemTask != null) {
-                    onSyncDataItemTask.execute(dataMap);
-                    flagHandled = true;
-                }
+                EventBus.getDefault().post(dataMap);
 
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 Log.d("DataItem Deleted", event.getDataItem().toString());
@@ -172,7 +149,6 @@ public class TeleportClient implements DataApi.DataListener,
         syncDataItem(putDataMapRequest);
     }
 
-
     //General method to sync data in the Data Layer
     public void syncDataItem(PutDataMapRequest putDataMapRequest) {
 
@@ -195,71 +171,6 @@ public class TeleportClient implements DataApi.DataListener,
 
                     }
                 });
-    }
-
-    /**
-     * Get the TeleportTask that will be executed when a DataItem is synced
-     */
-    public OnSyncDataItemTask getOnSyncDataItemTask() {
-        return onSyncDataItemTask;
-    }
-
-
-    /**
-     * Set the TeleportTask to be executed when a DataItem is synced
-     *
-     * @param onSyncDataItemTask A Task that extends TeleportTask that should be executed when a DataItem is Synced. Keep in mind it will be executed only once, so you might need to reset it.
-     */
-    public void setOnSyncDataItemTask(OnSyncDataItemTask onSyncDataItemTask) {
-        this.onSyncDataItemTask = onSyncDataItemTask;
-    }
-
-    /**
-     * Set a Builder to be called in order to have an AsyncTask Handling the DataItem syncing
-     * Keep in mind that you shall not use this unless you have multiple Syncing event coming in a short timelapse, thus requiring multiple AsyncTask to handle them.
-     *
-     * @param onSyncDataItemTaskBuilder A Builder for a task that extends TeleportTask that should be executed when a DataItem is Synced. Keep in mind it will be executed only once, so you might need to reset it.
-     */
-    public void setOnSyncDataItemTaskBuilder(OnSyncDataItemTask.Builder onSyncDataItemTaskBuilder) {
-        this.onSyncDataItemTaskBuilder = onSyncDataItemTaskBuilder;
-    }
-
-    /**
-     * Set the Callback to be executed when a DataItem is synced
-     *
-     * @param onSyncDataItemCallback A Task that extends TeleportTask that should be executed when a DataItem is Synced. Keep in mind it will be executed only once, so you might need to reset it.
-     */
-    public void setOnSyncDataItemCallback(OnSyncDataItemCallback onSyncDataItemCallback) {
-        this.onSyncDataItemCallback = onSyncDataItemCallback;
-    }
-
-
-    /**
-     * AsyncTask that will be executed when a DataItem is synced. You should extend this task and implement the onPostExecute() method when implementing your Activity.
-     */
-    public abstract static class OnSyncDataItemTask extends AsyncTask<DataMap, Void, DataMap> {
-
-        public abstract static class Builder {
-
-            public abstract OnSyncDataItemTask build();
-
-        }
-
-        protected DataMap doInBackground(DataMap... param) {
-
-            //DataMap dataMap = DataMap.fromByteArray((byte[]) param[0]);
-
-            return param[0];
-
-            //return param[0];
-        }
-
-        protected abstract void onPostExecute(DataMap result);
-    }
-
-    public abstract static class OnSyncDataItemCallback {
-
-        abstract public void onDataSync(DataMap dataMap);
     }
 
     //-----------------MESSAGING------------------//
@@ -319,77 +230,9 @@ public class TeleportClient implements DataApi.DataListener,
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d(TAG, "onMessageReceived() A message from watch was received:" + messageEvent.getRequestId() + " " + messageEvent.getPath());
 
-        boolean flagHandled = false;
-
-        if(onGetMessageTaskBuilder != null) {
-            String path = messageEvent.getPath();
-            onGetMessageTaskBuilder.build().execute(path);
-            flagHandled = true;
-        }
-
-        if(!flagHandled && onGetMessageCallback != null) {
-            String messagePath = messageEvent.getPath();
-            onGetMessageCallback.onCallback(messagePath);
-            flagHandled = true;
-        }
-
-        if (!flagHandled && onGetMessageTask != null) {
-            String messagePath = messageEvent.getPath();
-            onGetMessageTask.execute(messagePath);
-            flagHandled = true;
-        }
-
+        EventBus.getDefault().post(messageEvent.getPath());
     }
 
-    /**
-     * AsyncTask that will be executed when a Message is received You should extend this task and implement the onPostExecute() method when implementing your Activity.
-     */
-    public abstract static class OnGetMessageTask extends AsyncTask<String, Void, String> {
-
-        public abstract static class Builder {
-
-            public abstract OnGetMessageTask build();
-
-        }
-
-        protected String doInBackground(String... path) {
-
-            return path[0];
-
-
-        }
-
-        protected abstract void onPostExecute(String path);
-    }
-
-
-    public abstract static class OnGetMessageCallback {
-
-        abstract public void onCallback(String dataMap);
-    }
-
-    public OnGetMessageTask getOnGetMessageTask() {
-        return onGetMessageTask;
-    }
-
-    public void setOnGetMessageTask(OnGetMessageTask onGetMessageTask) {
-        this.onGetMessageTask = onGetMessageTask;
-    }
-
-
-    /**
-     * Set a Builder to be called in order to have an AsyncTask Handling Message
-     * Keep in mind that you shall not use this unless you have multiple Message event coming in a short timelapse, thus requiring multiple AsyncTask to handle them.
-     *
-     * @param onGetMessageTaskBuilder A Builder for a task that extends TeleportTask that should be executed when a DataItem is Synced. Keep in mind it will be executed only once, so you might need to reset it.
-     */
-    public void setOnGetMessageTaskBuilder(OnGetMessageTask.Builder onGetMessageTaskBuilder) {
-        this.onGetMessageTaskBuilder = onGetMessageTaskBuilder;
-    }
-
-    public void setOnGetMessageCallback(OnGetMessageCallback onGetMessageCallback) {
-        this.onGetMessageCallback = onGetMessageCallback;
-    }
     //---END MESSAGING ------
 
     @Override
@@ -435,32 +278,4 @@ public class TeleportClient implements DataApi.DataListener,
         protected abstract void onPostExecute(Bitmap bitmap);
 
     }
-
-    ;
-
-
-//    /**
-//     * Loads Bitmap from Asset
-//     *
-//     * @param asset Asset to be converted to Bitmap
-//     */
-//    public Bitmap loadBitmapFromAsset(Asset asset) {
-//        if (asset == null) {
-//            throw new IllegalArgumentException("Asset must be non-null");
-//        }
-//
-//        // convert asset into a file descriptor and block until it's ready
-//        InputStream assetInputStream = Wearable.DataApi.getFdForAsset(
-//                mGoogleApiClient, asset).await().getInputStream();
-//
-//
-//        if (assetInputStream == null) {
-//            Log.w(TAG, "Requested an unknown Asset.");
-//            return null;
-//        }
-//        // decode the stream into a bitmap
-//        return BitmapFactory.decodeStream(assetInputStream);
-//    }
-
-
 }

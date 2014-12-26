@@ -1,139 +1,36 @@
-# Teleport - Data Sync & Messaging Library for Android Wear
+# Teleport (Android Wear sync lib) + EventBus
 
 ![Screen](/doc/images/teleport_256.png)
 
-Teleport is a library to easily setup and manage Data Syncronization and Messaging on Android Wearables.
+**This is a modified version of Teleport, it uses EventBus to propagate Messages or DataItems across Services/Activities instead of AsyncTasks**
 
-*The library is thought for Android Studio.*
+I really encourage you to check both original lib and this to see which one fits your needs best.
 
+So use is the same as Teleport but receiving is done a bit differently.
 
+Firstly you need a Service that extends `WearableListenerService` to receive changes, if you want some custom/background handling of events, override methods `onDataChanged()` or `onMessageReceived()` - remember to call in those `EventBus.getDefault().post(content);` as otherwise bus will be **not** notified.
 
-##Quick Overview
+In your Wear Activity it is dead easy if you work with EventBus any time before that - even if not it is still easy.
 
-You can see Teleport as an Android Wear "plugin" you can add to your Activities and Services.
+Just registered `onStart()` and unregister in `onStop()` with default bus:
+'EventBus.getDefault().register(this);'
 
-Teleport provides you **commodity classes** to easily establish a communication between a mobile handheld device and an Android Wear device.
+and to receive messages implement method:
+`public void onEvent(final String event) {//do your magic here}`
 
-*  `TeleportClient` provides you "endpoints" you can put inside your Activities, both in Mobile and Wear.
-*  `TeleportService` is a full-fledged, already set-up 'WearableListenerService'. 
+to receive DataItems just use:
+`public void onEvent(DataMap dataMap) {//get object etc. }`
 
-Both these classes incapsulates all the `GoogleApiClient` setup required to establish a connection between Mobile and Wear.
+Simple as that!
 
-`TeleportClient` and `TeleportService` also provide you two `AsyncTask` you can extend to easily perform operations with the synced DataItems and received Messages:
+Michał Tajchert
+If you have any idea what to change just poke me:
+[Google+](https://plus.google.com/+MichalTajchert/)
 
-* `OnSyncDataItemTask` provides you a complete `DataMap` of synced data
-* `OnGetMessageTask` provides you access to a received Message `path` in form of `String`.
+I don't thing it is stuff to pull request, so (for now) it is quite separate and we will see what to do next - **merge or not to merge?**
 
-You just need to *extend* these tasks inside your Activity/Service and you're good to go!
+Original author of Teleport:
 
-To Sync Data and send Messages, you can use commodity methods like
-
-* `sync<ItemType>(String key, <ItemType> item)` to Sync Data across devices
-* `sendMessage(String path, byte[] payload)` to send a Message to another device.
-
-##Summary
-
-* [Library Set Up:](/doc/SETUP.md) How to import Teleport library in your project.
-* [TeleportClient in Activity:](/doc/TELEPORTCLIENT.md) How to setup a TeleportClient.
-* [TeleportService:](/doc/TELEPORTSERVICE.md) How to setup a TeleportService.
-* [Sync Data:](/doc/SYNCDATA.md) How to Sync Data
-* [Send and Receive Messages:](/doc/MESSAGE.md) How to Send and Receive Messages
-* [Advanced Usage:](/doc/ADVANCEDUSAGE.md) AsyncTask Factory and Callbacks
-
-##Can I have an example of how easy is Teleport to use?
-
-There you go :-) 
-
-Here's a *Mobile and a Wear Activity* already configured to Sync Data. 
-
-* The MobileActivity synchronizes a string "Hello, World!".
-* The WearActivity shows a Toast with the synchronized string.
-
-###MobileActivity.java   
-```java
-    
-    public class MobileActivity extends Activity {
-
-    TeleportClient mTeleportClient;
-    
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_mobile);
-
-             mTeleportClient = new TeleportClient(this);         
-         }
-
-        @Override
-        protected void onStart() {
-            super.onStart();
-            mTeleportClient.connect();
-            }
-
-        @Override
-        protected void onStop() {
-            super.onStop();
-            mTeleportClient.disconnect();
-         }
-    
-  
-        public void syncDataItem(View v) {                   
-           //Let's sync a String!
-           mTeleportClient.syncString("hello", "Hello, World!");   
-        }
-        
-    }
-```
-    
-###WearActivity.java
-    
-```java
-
-    public class WearActivity extends Activity {
-    
-        TeleportClient mTeleportClient;
-        
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_wear);
-    
-             mTeleportClient = new TeleportClient(this);
-             
-             mTeleportClient.setOnSyncDataItemTask(new ShowToastHelloWorldTask());
-             
-        }
-    
-        @Override
-        protected void onStart() {
-            super.onStart();
-            mTeleportClient.connect();
-        }
-    
-        @Override
-        protected void onStop() {
-            super.onStop();
-            mTeleportClient.disconnect();
-    
-        }
-    
-        public class ShowToastHelloWorldTask extends TeleportClient.OnSyncDataItemTask {
-        
-                @Override
-                protected void onPostExecute(DataMap dataMap) {
-        
-                    String hello = dataMap.getString("hello");   
-        
-                    Toast.makeText(getApplicationContext(),hello,Toast.LENGTH_SHORT).show();
-                }
-        }
-            
-    }
-```
-    
-Jump to [Library Set Up](/doc/SETUP.md) !!!
-
-##Follow me on
 Author: Mario Viviani
 <a href="https://plus.google.com/+MarioViviani/posts">
   <img alt="Follow me on Google+"
@@ -165,6 +62,5 @@ Teleport is released under the **Apache License 2.0**
         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
         See the License for the specific language governing permissions and
         limitations under the License.
-
 
 
