@@ -16,7 +16,7 @@ Each AsyncTask is provided with an appropriate builder. The main purpose is that
 mTeleportClient.setOnGetMessageTaskBuilder (
     new OnGetMessageTask.Builder () {
         @Override
-        public void build() {
+        public OnGetMessageTask build() {
             return new ShowToastAsyncTask();
         }
     }
@@ -26,7 +26,7 @@ mTeleportClient.setOnGetMessageTaskBuilder (
 mTeleportClient.setOnSyncDataItemTaskBuilder (
     new OnSyncDataItemTask.Builder () {
         @Override
-        public void build() {
+        public OnSyncDataItemTask build() {
             return new ShowToastAsyncTask();
         }
     }
